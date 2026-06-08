@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OnlyBrokers Admin</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#171717;background:#f7f6f2}.wrap{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:36px 0}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:24px}.panel{padding:24px;border:1px solid #dedbd2;border-radius:10px;background:#fff;box-shadow:0 18px 40px rgba(28,27,24,.08)}h1{margin:0;font-size:34px}h2{margin:30px 0 16px;font-size:22px}.muted{color:#696969}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:grid;gap:8px}label{font-weight:700}input,textarea{width:100%;border:1px solid #dedbd2;border-radius:8px;padding:12px;font:inherit;background:#fff}textarea{min-height:96px;resize:vertical}.image-field{padding:16px;border:1px solid #ece8dd;border-radius:10px;background:#fbfaf7}.image-preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;background:#eee}.actions{position:sticky;bottom:0;margin-top:24px;padding:16px 0;background:linear-gradient(rgba(247,246,242,0),#f7f6f2 28%);display:flex;flex-wrap:wrap;gap:10px}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border:0;border-radius:8px;color:#171717;background:#ff8a1f;font-weight:800;text-decoration:none;cursor:pointer}.button.secondary,button.secondary{background:#20201e;color:#fff}.notice{margin:0 0 16px;padding:12px 14px;border-radius:8px;font-weight:700}.ok{background:#eaf7ef;color:#17613f}.bad{background:#ffece7;color:#9b2d15}.hidden{display:none}@media (max-width:760px){.grid{grid-template-columns:1fr}.top{flex-direction:column}h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <div>
+        <h1>OnlyBrokers Admin</h1>
+        <p class="muted">Vercel-тест: текст и фото сохраняются в GitHub, потом Vercel обновляет сайт.</p>
+      </div>
+      <a class="button secondary" href="/" target="_blank">Открыть сайт</a>
+    </div>
+
+    <p class="notice hidden" data-message></p>
+
+    <section class="panel" data-login>
+      <h2>Вход</h2>
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" type="password" autocomplete="current-password" required />
+      </div>
+      <div class="actions">
+        <button type="button" data-login-button>Войти</button>
+      </div>
+    </section>
+
+    <form class="panel hidden" data-form>
+      <h2>Текст</h2>
+      <div class="grid" data-text-fields></div>
+
+      <h2>Фотографии</h2>
+      <div class="grid" data-image-fields></div>
+
+      <div class="actions">
+        <button type="submit">Сохранить изменения</button>
+        <button class="secondary" type="button" data-logout>Выйти</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const textFields = {
+      heroEyebrow: "Первый экран: надзаголовок",
+      heroTitle: "Первый экран: заголовок",
+      heroLead: "Первый экран: описание",
+      introKicker: "Вводный блок: надзаголовок",
+      introTitle: "Вводный блок: заголовок",
+      introText: "Вводный блок: текст",
+      directionsKicker: "Направления: надзаголовок",
+      directionsTitle: "Направления: заголовок",
+      directionsLead: "Направления: описание",
+      directionBaliTitle: "Бали: заголовок",
+      directionBaliText: "Бали: текст",
+      directionPhuketTitle: "Пхукет: заголовок",
+      directionPhuketText: "Пхукет: текст",
+      directionUaeTitle: "ОАЭ: заголовок",
+      directionUaeText: "ОАЭ: текст",
+      projectsKicker: "Проекты: надзаголовок",
+      projectsTitle: "Проекты: заголовок",
+      projectsLead: "Проекты: предупреждение",
+      projectOneLocation: "Проект 1: локация",
+      projectOneTitle: "Проект 1: заголовок",
+      projectOneText: "Проект 1: текст",
+      projectTwoLocation: "Проект 2: локация",
+      projectTwoTitle: "Проект 2: заголовок",
+      projectTwoText: "Проект 2: текст",
+      projectFeaturedLocation: "Полный каталог: метка",
+      projectFeaturedTitle: "Полный каталог: заголовок",
+      projectFeaturedText: "Полный каталог: текст",
+      platformKicker: "О платформе: надзаголовок",
+      platformTitle: "О платформе: заголовок",
+      platformTextOne: "О платформе: текст 1",
+      platformTextTwo: "О платформе: текст 2",
+      linksKicker: "Полезные ссылки: надзаголовок",
+      linksTitle: "Полезные ссылки: заголовок",
+      linksLead: "Полезные ссылки: описание",
+      linkTileOneTitle: "Плитка 1: заголовок",
+      linkTileOneText: "Плитка 1: текст",
+      linkTileTwoTitle: "Плитка 2: заголовок",
+      linkTileTwoText: "Плитка 2: текст",
+      linkTileThreeTitle: "Плитка 3: заголовок",
+      linkTileThreeText: "Плитка 3: текст",
+      linkTileFourTitle: "Плитка 4: заголовок",
+      linkTileFourText: "Плитка 4: текст",
+      benefitsKicker: "Преимущества: надзаголовок",
+      benefitsTitle: "Преимущества: заголовок",
+      benefitOneTitle: "Преимущество 1: заголовок",
+      benefitOneText: "Преимущество 1: текст",
+      benefitTwoTitle: "Преимущество 2: заголовок",
+      benefitTwoText: "Преимущество 2: текст",
+      benefitThreeTitle: "Преимущество 3: заголовок",
+      benefitThreeText: "Преимущество 3: текст",
+      benefitFourTitle: "Преимущество 4: заголовок",
+      benefitFourText: "Преимущество 4: текст",
+      teamKicker: "Команда: надзаголовок",
+      teamTitle: "Команда: заголовок",
+      teamLead: "Команда: описание",
+      personOneName: "Персона 1: имя",
+      personOneRole: "Персона 1: роль",
+      personOneText: "Персона 1: текст",
+      personTwoName: "Персона 2: имя",
+      personTwoRole: "Персона 2: роль",
+      personTwoText: "Персона 2: текст",
+      finalKicker: "Финальный блок: надзаголовок",
+      finalTitle: "Финальный блок: заголовок",
+      finalText: "Финальный блок: текст",
+      vpnNotice: "Заметка про VPN"
+    };
+
+    const imageFields = {
+      heroBackground: "Первый экран: фон",
+      projectOneImage: "Проект 1: фото",
+      projectTwoImage: "Проект 2: фото",
+      featuredBackground: "Полный каталог: фон",
+      benefitsBackground: "Преимущества: фон",
+      personOneImage: "Персона 1: фото",
+      personTwoImage: "Персона 2: фото"
+    };
+
+    const state = {
+      password: sessionStorage.getItem("onlybrokers_admin_password") || "",
+      content: { text: {}, images: {} }
+    };
+
+    const login = document.querySelector("[data-login]");
+    const form = document.querySelector("[data-form]");
+    const message = document.querySelector("[data-message]");
+    const textRoot = document.querySelector("[data-text-fields]");
+    const imageRoot = document.querySelector("[data-image-fields]");
+
+    function showMessage(text, type = "ok") {
+      message.className = `notice ${type}`;
+      message.textContent = text;
+    }
+
+    function setLoggedIn(value) {
+      login.classList.toggle("hidden", value);
+      form.classList.toggle("hidden", !value);
+    }
+
+    function fieldId(prefix, key) {
+      return `${prefix}-${key}`;
+    }
+
+    function renderFields() {
+      textRoot.innerHTML = Object.entries(textFields).map(([key, label]) => `
+        <div class="field">
+          <label for="${fieldId("text", key)}">${label}</label>
+          <textarea id="${fieldId("text", key)}" data-text="${key}"></textarea>
+        </div>
+      `).join("");
+
+      imageRoot.innerHTML = Object.entries(imageFields).map(([key, label]) => `
+        <div class="image-field">
+          <div class="field">
+            <label for="${fieldId("image", key)}">${label}</label>
+            <img class="image-preview hidden" data-preview="${key}" alt="">
+            <input id="${fieldId("image", key)}" type="text" data-image="${key}" placeholder="URL или путь к файлу">
+            <input type="file" accept="image/*" data-upload="${key}">
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function fillFields() {
+      Object.entries(textFields).forEach(([key]) => {
+        const input = document.querySelector(`[data-text="${key}"]`);
+        if (input) input.value = state.content.text?.[key] || "";
+      });
+
+      Object.entries(imageFields).forEach(([key]) => {
+        const input = document.querySelector(`[data-image="${key}"]`);
+        const preview = document.querySelector(`[data-preview="${key}"]`);
+        const value = state.content.images?.[key] || "";
+        if (input) input.value = value;
+        if (preview && value) {
+          preview.src = value;
+          preview.classList.remove("hidden");
+        }
+      });
+    }
+
+    async function readUpload(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadContent() {
+      const response = await fetch("/api/content", { cache: "no-store" });
+      const data = await response.json();
+
+      if (!data.ok) {
+        throw new Error(data.error || "Не удалось загрузить контент.");
+      }
+
+      state.content = data.content || { text: {}, images: {} };
+      renderFields();
+      fillFields();
+    }
+
+    async function verifyPassword() {
+      const response = await fetch("/api/content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "verify", password: state.password })
+      });
+      const data = await response.json();
+
+      if (!data.ok) {
+        throw new Error(data.error || "Неверный пароль.");
+      }
+    }
+
+    async function saveContent(event) {
+      event.preventDefault();
+      showMessage("Сохраняю...");
+
+      const content = { text: {}, images: {} };
+      const uploads = {};
+
+      Object.keys(textFields).forEach((key) => {
+        content.text[key] = document.querySelector(`[data-text="${key}"]`)?.value || "";
+      });
+
+      Object.keys(imageFields).forEach((key) => {
+        content.images[key] = document.querySelector(`[data-image="${key}"]`)?.value || "";
+        const file = document.querySelector(`[data-upload="${key}"]`)?.files?.[0];
+        if (file) {
+          uploads[key] = { name: file.name, data: null };
+        }
+      });
+
+      for (const [key, upload] of Object.entries(uploads)) {
+        const file = document.querySelector(`[data-upload="${key}"]`).files[0];
+        upload.data = await readUpload(file);
+      }
+
+      const response = await fetch("/api/content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: state.password, content, uploads })
+      });
+      const data = await response.json();
+
+      if (!data.ok) {
+        throw new Error(data.error || "Не удалось сохранить.");
+      }
+
+      showMessage(`${data.message} Коммит: ${data.commit || "готово"}`);
+      await loadContent();
+    }
+
+    document.querySelector("[data-login-button]").addEventListener("click", async () => {
+      state.password = document.querySelector("#password").value;
+      sessionStorage.setItem("onlybrokers_admin_password", state.password);
+
+      try {
+        await verifyPassword();
+        await loadContent();
+        setLoggedIn(true);
+        showMessage("Вход выполнен.");
+      } catch (error) {
+        showMessage(error.message, "bad");
+      }
+    });
+
+    document.querySelector("[data-logout]").addEventListener("click", () => {
+      state.password = "";
+      sessionStorage.removeItem("onlybrokers_admin_password");
+      setLoggedIn(false);
+      showMessage("Вы вышли.");
+    });
+
+    form.addEventListener("submit", (event) => {
+      saveContent(event).catch((error) => showMessage(error.message, "bad"));
+    });
+
+    if (state.password) {
+      verifyPassword()
+        .then(loadContent)
+        .then(() => {
+          setLoggedIn(true);
+          showMessage("Сессия восстановлена.");
+        })
+        .catch(() => setLoggedIn(false));
+    }
+  </script>
+</body>
+</html>
